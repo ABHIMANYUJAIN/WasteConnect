@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const authRoutes = require("./routes/authRoutes");
 
 dotenv.config();
 
@@ -11,11 +12,19 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
   res.send("WasteConnect API Running");
 });
-
+app.get("/hello", (req, res) => {
+  res.send("Hello Route Working");
+});
+app.get("/api/auth/test2", (req, res) => {
+  res.json({
+    message: "Server Route Working",
+  });
+});
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
