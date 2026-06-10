@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
+const protect = require("./middleware/authMiddleware");
 
 dotenv.config();
 
@@ -17,14 +18,13 @@ app.use("/api/auth", authRoutes);
 app.get("/", (req, res) => {
   res.send("WasteConnect API Running");
 });
-app.get("/hello", (req, res) => {
-  res.send("Hello Route Working");
-});
-app.get("/api/auth/test2", (req, res) => {
+app.get("/profile", protect, (req, res) => {
   res.json({
-    message: "Server Route Working",
+    message: "Protected Route Accessed",
+    user: req.user,
   });
 });
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
