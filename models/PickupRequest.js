@@ -33,6 +33,17 @@ const pickupRequestSchema = new mongoose.Schema(
       enum: ["pending", "assigned", "completed", "cancelled"],
       default: "pending",
     },
+
+    collectorId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "User",
+  default: null,
+},
+
+completedAt: {
+  type: Date,
+  default: null,
+},
   },
   {
     timestamps: true,

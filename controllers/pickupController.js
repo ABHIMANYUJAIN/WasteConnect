@@ -28,7 +28,25 @@ const createPickupRequest = async (req, res) => {
     });
   }
 };
+const getMyPickupRequests = async (req, res) => {
+  try {
+    const requests = await PickupRequest.find({
+      userId: req.user.id,
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      count: requests.length,
+      requests,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   createPickupRequest,
+  getMyPickupRequests,
 };
