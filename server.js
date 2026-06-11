@@ -5,6 +5,8 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const protect = require("./middleware/authMiddleware");
 const pickupRoutes = require("./routes/pickupRoutes");
+const collectorRoutes = require("./routes/collectorRoutes");
+
 
 dotenv.config();
 
@@ -16,6 +18,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/pickups", pickupRoutes);
+app.use("/api/collector", collectorRoutes);
 
 app.get("/", (req, res) => {
   res.send("WasteConnect API Running");
