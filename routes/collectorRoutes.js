@@ -7,6 +7,8 @@ const collectorOnly = require("../middleware/collectorMiddleware");
 const {
   getPendingRequests,
   acceptPickupRequest,
+  getMyAssignments,
+  completePickupRequest,
 } = require("../controllers/collectorController");
 
 router.get(
@@ -21,6 +23,20 @@ router.patch(
   protect,
   collectorOnly,
   acceptPickupRequest
+);
+
+router.get(
+  "/my-assignments",
+  protect,
+  collectorOnly,
+  getMyAssignments
+);
+
+router.patch(
+  "/complete/:id",
+  protect,
+  collectorOnly,
+  completePickupRequest
 );
 
 module.exports = router;
