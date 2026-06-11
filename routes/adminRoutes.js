@@ -6,6 +6,7 @@ const adminOnly = require("../middleware/adminMiddleware");
 
 const {
   getDashboardStats,
+  autoAssignRequest,
 } = require("../controllers/adminController");
 
 router.get(
@@ -13,6 +14,13 @@ router.get(
   protect,
   adminOnly,
   getDashboardStats
+);
+
+router.patch(
+  "/auto-assign/:id",
+  protect,
+  adminOnly,
+  autoAssignRequest
 );
 
 module.exports = router;

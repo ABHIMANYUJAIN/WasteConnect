@@ -44,6 +44,69 @@ const getDashboardStats = async (req, res) => {
   }
 };
 
+const autoAssignRequest = async (req, res) => {
+  try {
+    const request = await PickupRequest.findById(
+      req.params.id
+    );
+
+    if (!request) {
+      return res.status(404).json({
+        message: "Request not found",
+      });
+    }
+
+    if (request.status !== "pending") {
+      return res.status(400).json({
+        message: "Request is not pending",
+      });
+    }
+
+    const collectors = await User.find({
+      role: "collector",
+    });
+
+    if (collectors.length === 0) {
+      return res.status(400).json({
+        message: "No collectors available",
+      });
+    }
+
+    let selectedCollector = null;
+    let minWorkload = Infinity;
+
+    for (const collector of collectors) {
+      const workload =
+        await PickupRequest.countDocuments({
+          collectorId: collector._id,
+          status: "assigned",
+        });
+
+      if (workload < minWorkload) {
+        minWorkload = workload;
+        selectedCollector = collector;
+      }
+    }
+
+    request.collectorId = selectedCollector._id;
+    request.status = "assigned";
+
+    await request.save();
+
+    res.status(200).json({
+      message: "Request auto-assigned",
+      collector: selectedCollector.name,
+      request,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getDashboardStats,
+  autoAssignRequest,
 };
