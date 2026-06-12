@@ -9,9 +9,17 @@ const pickupRequestSchema = new mongoose.Schema(
     },
 
     wasteType: {
-      type: String,
-      required: true,
-    },
+  type: String,
+  enum: [
+    "Plastic",
+    "Paper",
+    "Metal",
+    "Glass",
+    "E-Waste",
+    "Cardboard"
+  ],
+  required: true,
+},
 
     weight: {
       type: Number,
@@ -19,9 +27,20 @@ const pickupRequestSchema = new mongoose.Schema(
     },
 
     address: {
-      type: String,
-      required: true,
-    },
+  type: String,
+  required: true,
+},
+
+location: {
+  latitude: {
+    type: Number,
+    required: false,
+  },
+  longitude: {
+    type: Number,
+    required: false,
+  },
+},
 
     pickupDate: {
       type: Date,
