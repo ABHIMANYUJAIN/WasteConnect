@@ -106,7 +106,52 @@ const autoAssignRequest = async (req, res) => {
   }
 };
 
+const getCollectorLeaderboard = async (req, res) => {
+  try {
+    const collectors = await User.find({
+      role: "collector",
+    });
+
+    const leaderboard = [];
+
+    for (const collector of collectors) {
+      const assigned =
+        await PickupRequest.countDocuments({
+          collectorId: collector._id,
+          status: "assigned",
+        });
+
+      const completed =
+        await PickupRequest.countDocuments({
+          collectorId: collector._id,
+          status: "completed",
+        });
+
+      leaderboard.push({
+        name: collector.name,
+        email: collector.email,
+        assigned,
+        completed,
+      });
+    }
+
+    leaderboard.sort(
+      (a, b) => b.completed - a.completed
+    );
+
+    res.status(200).json({
+      leaderboard,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getDashboardStats,
   autoAssignRequest,
+  getCollectorLeaderboard,
 };

@@ -7,6 +7,7 @@ const adminOnly = require("../middleware/adminMiddleware");
 const {
   getDashboardStats,
   autoAssignRequest,
+  getCollectorLeaderboard,
 } = require("../controllers/adminController");
 
 router.get(
@@ -21,6 +22,13 @@ router.patch(
   protect,
   adminOnly,
   autoAssignRequest
+);
+
+router.get(
+  "/leaderboard",
+  protect,
+  adminOnly,
+  getCollectorLeaderboard
 );
 
 module.exports = router;
