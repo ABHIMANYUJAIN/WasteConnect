@@ -73,7 +73,7 @@ const autoAssignRequest = async (req, res) => {
     }
 
     let selectedCollector = null;
-    let minWorkload = Infinity;
+    let bestScore = -Infinity; 
 
     for (const collector of collectors) {
       const workload =
@@ -82,10 +82,27 @@ const autoAssignRequest = async (req, res) => {
           status: "assigned",
         });
 
-      if (workload < minWorkload) {
-        minWorkload = workload;
-        selectedCollector = collector;
-      }
+      const completed =
+  await PickupRequest.countDocuments({
+    collectorId: collector._id,
+    status: "completed",
+  });
+
+const totalHandled =
+  workload + completed;
+
+const completionRate =
+  totalHandled === 0
+    ? 0
+    : (completed / totalHandled) * 100;
+
+const score =
+  completionRate - workload * 10;
+
+if (score > bestScore) {
+  bestScore = score;
+  selectedCollector = collector;
+}
     }
 
     request.collectorId = selectedCollector._id;
