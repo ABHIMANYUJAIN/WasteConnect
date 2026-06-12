@@ -6,6 +6,7 @@ const createPickupRequest = async (req, res) => {
       wasteType,
       weight,
       address,
+      location,
       pickupDate,
     } = req.body;
 
@@ -14,6 +15,7 @@ const createPickupRequest = async (req, res) => {
       wasteType,
       weight,
       address,
+      location,
       pickupDate,
     });
 
