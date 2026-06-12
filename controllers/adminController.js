@@ -127,12 +127,24 @@ const getCollectorLeaderboard = async (req, res) => {
           status: "completed",
         });
 
-      leaderboard.push({
-        name: collector.name,
-        email: collector.email,
-        assigned,
-        completed,
-      });
+      const totalHandled =
+  assigned + completed;
+
+const completionRate =
+  totalHandled === 0
+    ? 0
+    : (
+        (completed / totalHandled) *
+        100
+      ).toFixed(1);
+
+leaderboard.push({
+  name: collector.name,
+  email: collector.email,
+  assigned,
+  completed,
+  completionRate,
+});
     }
 
     leaderboard.sort(
