@@ -9,6 +9,7 @@ const {
   acceptPickupRequest,
   getMyAssignments,
   completePickupRequest,
+  getOptimizedRoute,
 } = require("../controllers/collectorController");
 
 router.get(
@@ -37,6 +38,13 @@ router.patch(
   protect,
   collectorOnly,
   completePickupRequest
+);
+
+router.get(
+  "/optimized-route",
+  protect,
+  collectorOnly,
+  getOptimizedRoute
 );
 
 module.exports = router;

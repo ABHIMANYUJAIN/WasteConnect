@@ -108,10 +108,83 @@ const completePickupRequest = async (req, res) => {
     });
   }
 };
+const getOptimizedRoute = async (req, res) => {
+  try {
+    const requests = await PickupRequest.find({
+      collectorId: req.user.id,
+      status: "assigned",
+    });
+
+    const validRequests = requests.filter(
+      (request) =>
+        request.location &&
+        request.location.latitude != null &&
+        request.location.longitude != null
+    );
+
+    if (validRequests.length === 0) {
+      return res.status(200).json({
+        count: 0,
+        route: [],
+      });
+    }
+
+    const route = [];
+
+    let remaining = [...validRequests];
+
+    let current = remaining.shift();
+
+    route.push(current);
+
+    while (remaining.length > 0) {
+      
+      let nearestIndex = 0;
+      let nearestDistance = Infinity;
+
+      for (let i = 0; i < remaining.length; i++) {
+        const dx =
+          current.location.latitude -
+          remaining[i].location.latitude;
+
+        const dy =
+          current.location.longitude -
+          remaining[i].location.longitude;
+
+        const distance = Math.sqrt(
+          dx * dx + dy * dy
+        );
+
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestIndex = i;
+        }
+      }
+      
+      current = remaining.splice(
+        nearestIndex,
+        1
+      )[0];
+
+      route.push(current);
+    }
+
+    res.status(200).json({
+      count: route.length,
+      route,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   getPendingRequests,
   acceptPickupRequest,
   getMyAssignments,
   completePickupRequest,
+  getOptimizedRoute,
 };
