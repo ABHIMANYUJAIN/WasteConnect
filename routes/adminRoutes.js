@@ -8,6 +8,7 @@ const {
   getDashboardStats,
   autoAssignRequest,
   getCollectorLeaderboard,
+  getWasteAnalytics,
 } = require("../controllers/adminController");
 
 router.get(
@@ -29,6 +30,13 @@ router.get(
   protect,
   adminOnly,
   getCollectorLeaderboard
+);
+
+router.get(
+  "/waste-analytics",
+  protect,
+  adminOnly,
+  getWasteAnalytics
 );
 
 module.exports = router;

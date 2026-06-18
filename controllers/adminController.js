@@ -179,8 +179,32 @@ leaderboard.push({
   }
 };
 
+const getWasteAnalytics = async (req, res) => {
+  try {
+    const analytics =
+      await PickupRequest.aggregate([
+        {
+          $group: {
+            _id: "$wasteType",
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+
+    res.status(200).json({
+      analytics,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getDashboardStats,
   autoAssignRequest,
   getCollectorLeaderboard,
+  getWasteAnalytics,
 };
