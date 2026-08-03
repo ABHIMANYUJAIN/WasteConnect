@@ -44,6 +44,34 @@ const getDashboardStats = async (req, res) => {
   }
 };
 
+const getPendingRequests = async (req, res) => {
+  try {
+
+    const requests =
+      await PickupRequest.find({
+        status: "pending",
+      })
+      .populate(
+        "userId",
+        "name email"
+      )
+      .sort({
+        createdAt: -1,
+      });
+
+    res.status(200).json({
+      requests,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
+
 const autoAssignRequest = async (req, res) => {
   try {
     const request = await PickupRequest.findById(
@@ -204,6 +232,7 @@ const getWasteAnalytics = async (req, res) => {
 
 module.exports = {
   getDashboardStats,
+  getPendingRequests,
   autoAssignRequest,
   getCollectorLeaderboard,
   getWasteAnalytics,

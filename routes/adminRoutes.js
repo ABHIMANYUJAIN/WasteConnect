@@ -9,6 +9,7 @@ const {
   autoAssignRequest,
   getCollectorLeaderboard,
   getWasteAnalytics,
+  getPendingRequests,
 } = require("../controllers/adminController");
 
 router.get(
@@ -37,6 +38,13 @@ router.get(
   protect,
   adminOnly,
   getWasteAnalytics
+);
+
+router.get(
+  "/pending",
+  protect,
+  adminOnly,
+  getPendingRequests
 );
 
 module.exports = router;
