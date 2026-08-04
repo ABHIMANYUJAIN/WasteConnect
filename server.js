@@ -7,6 +7,7 @@ const protect = require("./middleware/authMiddleware");
 const pickupRoutes = require("./routes/pickupRoutes");
 const collectorRoutes = require("./routes/collectorRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const path = require("path");
 
 
 dotenv.config();
@@ -17,6 +18,12 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(
+  "/uploads",
+  express.static(
+    path.join(__dirname, "uploads")
+  )
+);
 app.use("/api/auth", authRoutes);
 app.use("/api/pickups", pickupRoutes);
 app.use("/api/collector", collectorRoutes);

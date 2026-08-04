@@ -47,6 +47,16 @@ location: {
       required: true,
     },
 
+    image: {
+  type: String,
+  default: null,
+},
+
+completedImage: {
+  type: String,
+  default: null,
+},
+
     status: {
       type: String,
       enum: ["pending", "assigned", "completed", "cancelled"],

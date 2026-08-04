@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const upload = require("../config/multer");
 
 const protect = require("../middleware/authMiddleware");
 
@@ -11,6 +12,7 @@ const {
 router.post(
   "/create",
   protect,
+  upload.single("image"),
   createPickupRequest
 );
 
