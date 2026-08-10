@@ -7,6 +7,7 @@ const protect = require("../middleware/authMiddleware");
 const {
   createPickupRequest,
   getMyPickupRequests,
+  cancelPickupRequest,
 } = require("../controllers/pickupController");
 
 router.post(
@@ -20,6 +21,12 @@ router.get(
   "/my",
   protect,
   getMyPickupRequests
+);
+
+router.patch(
+  "/cancel/:id",
+  protect,
+  cancelPickupRequest
 );
 
 module.exports = router;

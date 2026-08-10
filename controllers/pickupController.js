@@ -58,8 +58,43 @@ const getMyPickupRequests = async (req, res) => {
     });
   }
 };
+const cancelPickupRequest = async (req, res) => {
+  try {
+    const request = await PickupRequest.findOne({
+      _id: req.params.id,
+      userId: req.user.id,
+    });
+
+    if (!request) {
+      return res.status(404).json({
+        message: "Pickup request not found",
+      });
+    }
+
+    if (request.status !== "pending") {
+      return res.status(400).json({
+        message: "Only pending requests can be cancelled",
+      });
+    }
+
+    request.status = "cancelled";
+
+    await request.save();
+
+    res.status(200).json({
+      message: "Pickup request cancelled",
+      request,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   createPickupRequest,
   getMyPickupRequests,
+  cancelPickupRequest,
 };
