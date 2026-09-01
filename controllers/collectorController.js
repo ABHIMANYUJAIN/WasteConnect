@@ -1,4 +1,5 @@
 const PickupRequest = require("../models/PickupRequest");
+const User = require("../models/User");
 
 const getPendingRequests = async (req, res) => {
   try {
@@ -92,13 +93,51 @@ const completePickupRequest = async (req, res) => {
       });
     }
 
+    if (request.status !== "assigned") {
+      return res.status(400).json({
+        message: "Pickup is not currently assigned",
+      });
+    }
+
+    const user = await User.findById(
+      request.userId
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const pointsPerKg = {
+      Plastic: 10,
+      Paper: 5,
+      Cardboard: 5,
+      Glass: 8,
+      Metal: 12,
+      "E-Waste": 15,
+    };
+
+    const rate =
+      pointsPerKg[request.wasteType] || 0;
+
+    const pointsEarned =
+      request.weight * rate;
+
+    user.greenPoints =
+      (user.greenPoints || 0) +
+      pointsEarned;
+
     request.status = "completed";
     request.completedAt = new Date();
 
+    await user.save();
     await request.save();
 
     res.status(200).json({
       message: "Pickup completed",
+      pointsEarned,
+      totalGreenPoints: user.greenPoints,
       request,
     });
 

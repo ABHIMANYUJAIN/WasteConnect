@@ -8,6 +8,7 @@ const {
   createPickupRequest,
   getMyPickupRequests,
   cancelPickupRequest,
+  getMyGreenPoints,
 } = require("../controllers/pickupController");
 
 router.post(
@@ -27,6 +28,12 @@ router.patch(
   "/cancel/:id",
   protect,
   cancelPickupRequest
+);
+
+router.get(
+  "/points",
+  protect,
+  getMyGreenPoints
 );
 
 module.exports = router;

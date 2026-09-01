@@ -1,4 +1,5 @@
 const PickupRequest = require("../models/PickupRequest");
+const User = require("../models/User");
 
 const createPickupRequest = async (req, res) => {
   try {
@@ -93,8 +94,32 @@ const cancelPickupRequest = async (req, res) => {
   }
 };
 
+const getMyGreenPoints = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select(
+      "greenPoints"
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      greenPoints: user.greenPoints || 0,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createPickupRequest,
   getMyPickupRequests,
   cancelPickupRequest,
+  getMyGreenPoints,
 };

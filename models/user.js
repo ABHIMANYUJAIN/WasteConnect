@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "collector", "admin"],
       default: "user",
     },
+    greenPoints: {
+  type: Number,
+  default: 0,
+},
   },
   {
     timestamps: true,
